@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portal Kelas Digital — Platform Belajar & E-Course Modern</title>
+  <meta name="description" content="Portal e-learning dan e-course produk digital dengan modul interaktif, pembayaran otomatis/manual, CRM, dan akses instan."/>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+  <!-- Tailwind CSS & Config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#433794",
+            "on-primary": "#ffffff",
+            "primary-container": "#5b50ad",
+            "on-primary-container": "#d8d2ff",
+            "bg-canvas-light": "#F7F6FC",
+            "surface-white": "#FFFFFF",
+            "text-primary": "#242238",
+            "text-secondary": "#605C76",
+            "border-light": "#DED9EC",
+            "pastel-lavender": "#EEEAF8",
+            "pastel-lilac": "#F4E7F8",
+            "pastel-blush": "#FAEAF0",
+            "status-paid-bg": "#DCFCE7",
+            "status-paid-text": "#166534",
+            "status-pending-bg": "#FEF9C3",
+            "status-pending-text": "#854D0E",
+            "status-rejected-bg": "#FEE2E2",
+            "status-rejected-text": "#991B1B",
+            "dark-canvas": "#171525",
+            "dark-surface": "#232036",
+            "dark-elevated": "#302B46",
+            "dark-text-primary": "#F4F1FF",
+            "dark-text-secondary": "#C4BED6",
+            "dark-border": "#48415F",
+            "dark-accent": "#B8ACFF",
+            "secondary": "#5f5d69",
+            "outline-variant": "#c9c4d3",
+            "surface-container": "#f0ebff",
+            "surface-container-low": "#f6f1ff",
+            "surface-container-highest": "#e4dffd",
+            "error": "#ba1a1a"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- External Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="window.dispatchEvent(new Event('google-identity-ready'))"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css"/>
+
+  <style>
+    /* Transisi Halus untuk SPA */
+    .content-section {
+      animation: fadeInSection 0.25s ease-out;
+    }
+    @keyframes fadeInSection {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-bg-canvas-light text-text-primary font-sans antialiased">
+
+  <!-- Mobile Sidebar Overlay -->
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+  <!-- ============================================================ -->
+  <!-- SIDEBAR NAVIGATION (224px Desktop, Drawer Mobile)            -->
+  <!-- ============================================================ -->
+  <aside id="sidebar" class="sidebar">
+    <!-- Brand / Logo -->
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">
+        <span class="material-symbols-outlined text-[20px]">school</span>
+      </div>
+      <div class="sidebar-logo-text">
+        <span class="sidebar-logo-title">Portal Kelas</span>
+        <span class="sidebar-logo-subtitle">Digital Learning</span>
+      </div>
+    </div>
+
+    <!-- Navigation List -->
+    <div class="sidebar-nav">
+      <!-- Area Siswa -->
+      <div class="sidebar-section-label">Area Siswa</div>
+
+      <a href="#katalog" class="nav-item active" data-nav-link="katalog">
+        <span class="material-symbols-outlined nav-icon">menu_book</span>
+        <span>Katalog Kelas</span>
+      </a>
+
+      <a href="#dashboard-member" class="nav-item" data-nav-link="dashboard-member">
+        <span class="material-symbols-outlined nav-icon">space_dashboard</span>
+        <span>Dashboard</span>
+      </a>
+
+      <a href="#kelas-saya" class="nav-item" data-nav-link="kelas-saya">
+        <span class="material-symbols-outlined nav-icon">play_lesson</span>
+        <span>Kelas Saya</span>
+      </a>
+
+      <a href="#transaksi" class="nav-item" data-nav-link="transaksi">
+        <span class="material-symbols-outlined nav-icon">receipt_long</span>
+        <span>Transaksi</span>
+      </a>
+
+      <a href="#profil" class="nav-item" data-nav-link="profil">
+        <span class="material-symbols-outlined nav-icon">person</span>
+        <span>Profil Saya</span>
+      </a>
+
+      <!-- Area Manajemen Admin -->
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section-label">Manajemen Admin</div>
+
+      <a href="#dashboard-admin" class="nav-item" data-nav-link="dashboard-admin">
+        <span class="material-symbols-outlined nav-icon">monitoring</span>
+        <span>Dashboard Bisnis</span>
+      </a>
+
+      <a href="#admin-kelas" class="nav-item" data-nav-link="admin-kelas">
+        <span class="material-symbols-outlined nav-icon">auto_stories</span>
+        <span>Kelas & Materi</span>
+      </a>
+
+      <a href="#admin-pembayaran" class="nav-item" data-nav-link="admin-pembayaran">
+        <span class="material-symbols-outlined nav-icon">payments</span>
+        <span>Pesanan & Bayar</span>
+      </a>
+
+      <a href="#admin-anggota" class="nav-item" data-nav-link="admin-anggota">
+        <span class="material-symbols-outlined nav-icon">group</span>
+        <span>Member & Akses</span>
+      </a>
+
+      <a href="#admin-crm" class="nav-item" data-nav-link="admin-crm">
+        <span class="material-symbols-outlined nav-icon">contact_page</span>
+        <span>CRM & Prospek</span>
+      </a>
+    </div>
+
+    <!-- Sidebar Footer / User Profile -->
+    <div class="sidebar-footer">
+      <div class="sidebar-profile">
+        <div class="sidebar-avatar">
+          <span class="material-symbols-outlined text-[20px]">account_circle</span>
+        </div>
+        <div class="sidebar-profile-info">
+          <div class="sidebar-profile-name" id="sidebar-user-name">Pengunjung</div>
+          <div class="sidebar-profile-role" id="sidebar-user-role">Tamu</div>
+        </div>
+        <button type="button" onclick="logout()" title="Keluar / Ganti Akun" class="text-white/70 hover:text-white transition-colors ml-auto p-1">
+          <span class="material-symbols-outlined text-[18px]">logout</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============================================================ -->
+  <!-- TOP HEADER (Fixed 64px)                                      -->
+  <!-- ============================================================ -->
+  <header class="header">
+    <div class="header-left flex items-center gap-3">
+      <!-- Mobile Hamburger Button -->
+      <button id="btn-hamburger" type="button" class="header-icon-btn md:hidden text-text-primary" aria-label="Buka Menu">
+        <span class="material-symbols-outlined text-[22px]">menu</span>
+      </button>
+
+      <!-- Search Input -->
+      <div class="relative flex items-center w-64 md:w-80">
+        <span class="material-symbols-outlined absolute left-3 text-secondary text-[18px]">search</span>
+        <input id="header-search-input" type="text" placeholder="Cari materi kuliah, modul..." 
+               class="w-full h-9 pl-9 pr-3 bg-bg-canvas-light rounded-full border border-border-light text-text-primary placeholder:text-text-secondary text-sm focus:outline-none focus:border-primary-container transition-all"/>
+      </div>
+    </div>
+
+    <div class="header-right flex items-center gap-2 sm:gap-3">
+      <!-- Theme Switch Capsule -->
+      <div class="flex items-center bg-bg-canvas-light rounded-full p-0.5 border border-border-light text-xs">
+        <button type="button" onclick="setTheme('light')" class="px-2.5 py-1 rounded-full text-text-secondary hover:text-text-primary flex items-center gap-1 transition-colors" title="Mode Terang">
+          <span class="material-symbols-outlined text-[14px]">light_mode</span>
+          <span class="hidden sm:inline">Terang</span>
+        </button>
+        <button type="button" onclick="setTheme('dark')" class="px-2.5 py-1 rounded-full text-text-secondary hover:text-text-primary flex items-center gap-1 transition-colors" title="Mode Gelap">
+          <span class="material-symbols-outlined text-[14px]">dark_mode</span>
+          <span class="hidden sm:inline">Gelap</span>
+        </button>
+        <button type="button" onclick="setTheme('system')" class="px-2.5 py-1 rounded-full text-text-secondary hover:text-text-primary flex items-center gap-1 transition-colors" title="Sistem">
+          <span class="material-symbols-outlined text-[14px]">settings_brightness</span>
+          <span class="hidden sm:inline">Auto</span>
+        </button>
+      </div>
+
+      <!-- Quick Action / Login Button -->
+      <a href="#login" data-nav-link="login" class="btn-primary text-xs sm:text-sm px-4 py-1.5 rounded-full flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-[16px]">login</span>
+        <span>Masuk</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- ============================================================ -->
+  <!-- MAIN CONTENT CONTAINER                                       -->
+  <!-- ============================================================ -->
+  <main class="main-content">
+    <div class="page-container">
+
+      <!-- ====================================================== -->
+      <!-- SECTION 1: KATALOG KELAS (Publik & Member)            -->
+      <!-- ====================================================== -->
+      <section id="section-katalog" class="content-section">
+        <div class="space-y-6 max-w-7xl mx-auto">
+          <!-- Top Title & Filter Strip -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-text-primary">Katalog Kelas Digital</h1>
+              <p class="text-text-secondary text-sm mt-1">Pilih kurikulum pembelajaran produk digital, cloud, dan web app terstruktur.</p>
+            </div>
+            
+            <!-- Quick Category Tabs -->
+            <div class="flex items-center gap-2 flex-wrap">
+              <button type="button" class="px-3.5 py-1.5 rounded-full text-xs font-medium bg-primary-container text-white">Semua Kategori</button>
+              <button type="button" class="px-3.5 py-1.5 rounded-full text-xs font-medium bg-white border border-border-light text-text-secondary hover:text-text-primary">Google Apps Script</button>
+              <button type="button" class="px-3.5 py-1.5 rounded-full text-xs font-medium bg-white border border-border-light text-text-secondary hover:text-text-primary">Fullstack Cloud</button>
+              <button type="button" class="px-3.5 py-1.5 rounded-full text-xs font-medium bg-white border border-border-light text-text-secondary hover:text-text-primary">Automasi Bisnis</button>
+            </div>
+          </div>
+
+          <!-- Hero Banner (Pastel Lavender) -->
+          <div class="card card-lavender p-6 md:p-8 flex flex-col md:flex-row items-center gap-6">
+            <div class="w-16 h-16 rounded-2xl bg-primary text-white flex items-center justify-center shrink-0 shadow-md">
+              <span class="material-symbols-outlined text-[36px]">rocket_launch</span>
+            </div>
+            <div class="flex-1">
+              <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-white/70 text-primary mb-2">Kurikulum Terakreditasi 2026</span>
+              <h2 class="text-xl md:text-2xl font-bold text-text-primary">Belajar Mandiri, Dipandu Studi Kasus Nyata</h2>
+              <p class="text-text-secondary text-sm mt-1 max-w-2xl">Semua kelas dilengkapi video interaktif, source code siap pakai, grup diskusi, dan akses selamanya tanpa biaya langganan bulanan.</p>
+            </div>
+            <a href="#dashboard-member" data-nav-link="dashboard-member" class="btn-primary shrink-0">
+              Mulai Belajar Sekarang
+            </a>
+          </div>
+
+          <!-- Catalog Grid -->
+          <div id="catalog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dynamic course cards injected by loadCatalog() in app.js -->
+            <div class="card p-6 flex flex-col justify-between hover:shadow-lg transition-shadow">
+              <div class="space-y-3">
+                <div class="w-full h-40 bg-pastel-lavender rounded-xl flex items-center justify-center">
+                  <span class="material-symbols-outlined text-primary text-[48px]">terminal</span>
+                </div>
+                <span class="badge badge-primary">Google Apps Script</span>
+                <h3 class="font-bold text-lg text-text-primary">Mastering GAS Fullstack & REST API</h3>
+                <p class="text-sm text-text-secondary line-clamp-2">Bangun web app decoupling dengan backend GAS, spreadsheet database, dan frontend modern.</p>
+              </div>
+              <div class="mt-4 pt-4 border-t border-border-light flex items-center justify-between">
+                <span class="font-bold text-primary">Rp 249.000</span>
+                <button type="button" class="btn-primary btn-sm" onclick="navigateTo('checkout', {courseId: 'demo-gas', title: 'Mastering GAS Fullstack', price: 249000})">Beli Kelas</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================== -->
+      <!-- SECTION 2: LOGIN & REGISTER                            -->
+      <!-- ====================================================== -->
+      <section id="section-login" class="content-section" style="display: none;">
+        <div class="max-w-md mx-auto my-12 card p-8 shadow-xl text-center space-y-6">
+          <div class="w-16 h-16 rounded-2xl bg-pastel-lavender text-primary flex items-center justify-center mx-auto shadow-sm">
+            <span class="material-symbols-outlined text-[32px]">lock</span>
+          </div>
+
+          <div>
+            <h2 class="text-2xl font-bold text-text-primary">Masuk ke Portal</h2>
+            <p class="text-sm text-text-secondary mt-1">Akses seluruh kelas, sertifikat, dan progres belajar Anda.</p>
+          </div>
+
+          <!-- Google Sign-In Container -->
+          <div class="py-2 flex justify-center">
+            <div id="google-signin-btn"></div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <div class="flex-1 h-px bg-border-light"></div>
+            <span class="text-xs text-text-secondary">atau masuk sebagai Admin / Tamu</span>
+            <div class="flex-1 h-px bg-border-light"></div>
+          </div>
+
+          <!-- Demo Quick Access Buttons -->
+          <div class="grid grid-cols-2 gap-3">
+            <button type="button" class="btn-secondary text-xs py-2.5" onclick="appState.user = {name: 'Christine Eva', email: 'eva@example.com', role: 'member', token: 'demo-token'}; navigateTo('dashboard-member'); showToast('Masuk sebagai Member Demo', 'success');">
+              <span class="material-symbols-outlined text-[16px]">person</span>
+              <span>Demo Member</span>
+            </button>
+            <button type="button" class="btn-secondary text-xs py-2.5" onclick="appState.user = {name: 'Administrator', email: 'admin@example.com', role: 'admin', token: 'demo-admin-token'}; navigateTo('dashboard-admin'); showToast('Masuk sebagai Admin Demo', 'success');">
+              <span class="material-symbols-outlined text-[16px]">admin_panel_settings</span>
+              <span>Demo Admin</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================== -->
+      <!-- SECTION 3: DASHBOARD MEMBER                            -->
+      <!-- ====================================================== -->
+      <section id="section-dashboard-member" class="content-section" style="display: none;">
+        <div class="content-with-panel max-w-[1600px] mx-auto">
+          <!-- Central Left Column -->
+          <div class="space-y-6">
+            <!-- Greeting & Quick Stats -->
+            <div class="card card-lavender p-6 md:p-8">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h1 class="text-2xl md:text-3xl font-bold text-text-primary" id="member-greeting">Halo, Christine Eva! 👋</h1>
+                  <p class="text-sm text-text-secondary mt-1">Selamat datang kembali! Lanjutkan progres belajarmu hari ini.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="badge badge-paid">Member Aktif</span>
+                  <span class="badge badge-info">3 Kelas Berjalan</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Continue Learning Hero Card -->
+            <div id="continue-learning">
+              <div class="card p-6 border-l-4 border-primary">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                  <div class="space-y-2 flex-1">
+                    <span class="badge badge-pending">Pelajaran Terakhir</span>
+                    <h3 class="text-lg font-bold text-text-primary">Modul 3: Server Actions & Authentication</h3>
+                    <p class="text-sm text-text-secondary">Kelas: Mastering Next.js 14 & Digital Products</p>
+                    <div class="w-full bg-surface-container rounded-full h-2 mt-2 max-w-md">
+                      <div class="bg-primary h-2 rounded-full" style="width: 68%;"></div>
+                    </div>
+                  </div>
+                  <button type="button" class="btn-primary" onclick="navigateTo('ruang-belajar', {courseId: 'nextjs-14'})">
+                    Lanjutkan Belajar
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Enrolled Courses List -->
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold text-text-primary">Kelas Saya</h2>
+                <a href="#kelas-saya" data-nav-link="kelas-saya" class="text-xs text-primary font-semibold hover:underline">Lihat Semua</a>
+              </div>
+              <div id="enrolled-courses-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Injected by loadMemberDashboard() in app.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Activity Panel -->
+          <div class="right-panel space-y-6">
+            <!-- Announcement Widget -->
+            <div class="card p-5 space-y-3">
+              <h3 class="font-bold text-base text-text-primary flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-[20px]">campaign</span>
+                <span>Pengumuman</span>
+              </h3>
+              <div id="announcements-list" class="space-y-3 text-sm">
+                <div class="p-3 bg-surface-container-low rounded-xl">
+                  <div class="font-semibold text-text-primary text-xs">Update Materi Modul 4</div>
+                  <p class="text-xs text-text-secondary mt-0.5">Modul Webhook & Payment Gateway sudah tersedia untuk seluruh peserta.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Help Center -->
+            <div class="card card-lilac p-5 space-y-2">
+              <h4 class="font-bold text-sm text-text-primary">Butuh Bantuan?</h4>
+              <p class="text-xs text-text-secondary">Tim mentor kami siap membantu kendala teknis dan pertanyaan materi kapan saja.</p>
+              <a href="https://wa.me/" target="_blank" rel="noopener" class="btn-secondary btn-sm inline-flex items-center gap-1.5 mt-2">
+                <span class="material-symbols-outlined text-[16px]">chat</span>
+                <span>Hubungi Kami via WA</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================== -->
+      <!-- SECTION 4: KELAS SAYA (Semua Kelas yang Dibeli)        -->
+      <!-- ====================================================== -->
+      <section id="section-kelas-saya" class="content-section" style="display: none;">
+        <div class="max-w-7xl mx-auto space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h1 class="text-2xl md:text-3xl font-bold text-text-primary">Daftar Kelas Saya</h1>
+              <p class="text-sm text-text-secondary mt-1">Kelola progres dan buka ruang belajar materi kelas Anda.</p>
+            </div>
+            <button type="button" onclick="navigateTo('katalog')" class="btn-secondary text-xs sm:text-sm">
+              + Tambah Kelas Baru
+            </button>
+          </div>
+
+          <div id="my-courses-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Injected by loadMyCourses() in app.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================== -->
+      <!-- SECTION 5: RUANG BELAJAR (Video & Materi Interaktif)   -->
+      <!-- ====================================================== -->
+      <section id="section-ruang-belajar" class="content-section" style="display: none;">
+        <div class="max-w-7xl mx-auto space-y-6">
+          <!-- Top Navigation Bar -->
+          <div class="flex items-center justify-between gap-4 bg-white p-4 rounded-2xl shadow-sm">
+            <button type="button" onclick="navigateTo('kelas-saya')" class="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-primary transition-colors">
+              <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+              <span>Kembali ke Kelas Saya</span>
+            </button>
+            <div class="flex items-center gap-2">
+              <button id="btn-prev-lesson" type="button" class="btn-secondary btn-sm">Sebelumnya</button>
+              <button id="btn-next-lesson" type="button" class="btn-secondary btn-sm">Berikutnya</button>
+              <button id="btn-lesson-done" type="button" class="btn-primary btn-sm flex items-center gap-1">
+                <span class="material-symbols-outlined text-[16px]">check_circle</span>
+                <span>Tandai Selesai</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Video & Lesson Details Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Left: Video Player & Material Downloads (8 Cols) -->
+            <div class="lg:col-span-8 space-y-6">
+              <!-- Video Container -->
+              <div class="card p-2 overflow-hidden bg-black rounded-3xl">
+                <div id="lesson-video" class="aspect-video w-full rounded-2xl overflow-hidden flex items-center justify-center bg-dark-canvas text-white">
+                  <!-- Video Iframe or Placeholder injected by loadLesson() -->
+                  <div class="text-center p-6 space-y-2">
+                    <span class="material-symbols-outlined text-[48px] text-primary-container">play_circle</span>
+                    <p class="text-sm">Pilih pelajaran di panel samping untuk memutar materi.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Title & Lesson Description -->
+              <div class="card p-6 space-y-3">
+                <h1 id="lesson-title" class="text-2xl font-bold text-text-primary">Judul Pelajaran</h1>
+                <p class="text-sm text-text-secondary">Simak pembahasan mendalam pada modul ini. Catat hal-hal krusial dan unduh berkas pendukung di bawah.</p>
+              </div>
+
+              <!-- Downloadable Materials -->
+              <div class="card p-6 space-y-3">
+                <h3 class="font-bold text-base text-text-primary flex items-center gap-2">
+                  <span class="material-symbols-outlined text-primary text-[20px]">download</span>
+                  <span>Berkas & Materi Pendukung</span>
+                </h3>
+                <div id="lesson-downloads" class="space-y-2">
+                  <!-- Injected by loadLesson() -->
+                  <p class="text-sm text-text-secondary">Tidak ada berkas tambahan untuk pelajaran ini.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Module Accordion / Playlist (4 Cols) -->
+            <div class="lg:col-span-4 space-y-4">
+              <div class="card p-5 space-y-4">
+                <h3 class="font-bold text-base text-text-primary">Daftar Modul & Pelajaran</h3>
+                <div id="lesson-modules" class="space-y-3">
+                  <!-- Injected by loadLesson() -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================== -->
+      <!-- SECTION 6: CHECKOUT & PEMBAYARAN                       -->
+      <!-- ====================================================== -->
+      <section id="section-checkout" class="content-section" style="display: none;">
+        <div class="max-w-4xl mx-auto space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h1 class="text-2xl md:text-3xl font-bold text-text-primary">Checkout & Pembayaran</h1>
+              <p class="text-sm text-text-secondary mt-1">Selesaikan pesanan untuk membuka akses belajar kelas ini.</p>
+            </div>
+            <!-- Countdown Timer -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-status-pending-bg text-status-pending-text font-bold text-sm">
+              <span class="material-symbols-outlined text-[18px]">timer</span>
+              <span id="checkout-countdown">23:59:59</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Order Summary Card -->
+            <div class="card p-6 space-y-4">
+              <h3 class="font-bold text-lg text-text-primary">Ringkasan Pesanan</h3>
+              <div id="checkout-summary" class="space-y-3">
+                <!-- Injected by initCheckout() -->
+              </div>
+            </div>
+
+            <!-- Payment Instructions & Upload Proof -->
+            <div class="card p-6 space-y-4">
+              <h3 class="font-bold text-lg text-text-primary">Instruksi Pembayaran</h3>
+              <div id="payment-instructions" class="space-y-4 text-sm">
+                <!-- Injected by initCheckout() -->
+              </div>
+
+              <!-- Upload Proof File -->
+              <div class="pt-4 border-t border-border-light space-y-3">
+                <label class="block font-semibold text-xs text-text-primary">Unggah Bukti Transfer / Pembayaran</label>
+                <input id="payment-proof-file" type="file" accept="image/*,.pdf" class="w-full text-xs text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary-container file:text-white hover:file:bg-primary"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================== -->
+      <!-- SECTION 7: RIWAYAT TRANSAKSI                           -->
+      <!-- ====================================================== -->
+      <section id="section-transaksi" class="content-section" style="display: none;">
+        <div class="max-w-6xl mx-auto space-y-6">
+          <h1 class="text-2xl md:text-3xl font-bold text-text-primary">Riwayat Transaksi</h1>
+          <p class="text-sm text-text-secondary">Daftar transaksi pesanan dan status verifikasi pembayaran Anda.</p>
+
+          <div class="card overflow-hidden">
+            <div class="table-responsive">
+              <table class="table-modern w-full text-left text-sm">
+                <thead>
+                  <tr class="bg-surface-container">
+                    <th class="p-4">No. Pesanan</th>
+                    <th class="p-4">Kelas</th>
+                    <th class="p-4">Nominal</th>
+                    <th class="p-4">Status</th>
+                    <th class="p-4">Tanggal</th>
+                  </tr>
+                </thead>
+                <tbody id="member-orders-table-body">
+                  <tr>
+                    <td class="p-4 font-mono font-bold text-primary">#ORD-202611-001</td>
+                    <td class="p-4 font-medium">Mastering Next.js 14</td>
+                    <td class="p-4">Rp 299.000</td>
+                    <td class="p-4"><span class="badge badge-paid">Lunas</span></td>
+                    <td class="p-4 text-text-secondary">08 Nov 2026</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================== -->
+      <!-- SECTION 8: DASHBOARD ADMIN                             -->
+      <!-- ====================================================== -->
+      <section id="section-dashboard-admin" class="content-section" style="display: none;">
+        <div class="max-w-7xl mx-auto space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h1 class="text-2xl md:text-3xl font-bold text-text-primary">Dashboard Bisnis & Analitik</h1>
+              <p class="text-sm text-text-secondary mt-1">Pantau performa penjualan, antrean verifikasi pembayaran, dan prospek CRM.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="loadAdminDashboard()" class="btn-secondary btn-sm flex items-center gap-1">
+                <span class="material-symbols-outlined text-[16px]">refresh</span>
+                <span>Perbarui Data</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- KPI Cards Strip -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="card p-5 space-y-1">
+              <span class="text-xs text-text-secondary font-medium">Total Pendapatan</span>
+              <div class="text-2xl font-bold text-primary">Rp 14.850.000</div>
+              <span class="text-xs text-status-paid-text font-semibold">+18% dari bulan lalu</span>
+            </div>
+            <div class="card p-5 space-y-1">
+              <span class="text-xs text-text-secondary font-medium">Pesanan Terverifikasi</span>
+              <div class="text-2xl font-bold text-text-primary">64 Pesanan</div>
+              <span class="text-xs text-text-secondary">Bulan ini</span>
+            </div>
+            <div class="card p-5 space-y-1">
+              <span class="text-xs text-text-secondary font-medium">Antrean Verifikasi</span>
+              <div class="text-2xl font-bold text-status-pending-text">3 Menunggu</div>
+              <span class="text-xs text-status-pending-text font-semibold">Perlu tindakan</span>
+            </div>
+            <div class="card p-5 space-y-1">
+              <span class="text-xs text-text-secondary font-medium">Total Member Aktif</span>
+              <div class="text-2xl font-bold text-text-primary">128 Siswa</div>
+              <span class="text-xs text-status-paid-text font-semibold">Tingkat kelulusan 84%</span>
+            </div>
+          </div>
+
+          <!-- Charts Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Revenue Line Chart -->
+            <div class="card p-6 space-y-4">
+              <h3 class="font-bold text-base text-text-primary">Grafik Pendapatan 30 Hari</h3>
+              <div class="h-64">
+                <canvas id="revenue-chart"></canvas>
+              </div>
+            </div>
+
+            <!-- Sales / Enrollment Bar Chart -->
+            <div class="card p-6 space-y-4">
+              <h3 class="font-bold text-base text-text-primary">Penjualan per Kategori Kelas</h3>
+              <div class="h-64">
+                <canvas id="sales-chart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Verification Queue & CRM Tasks -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Payment Verification Queue -->
+            <div class="card p-6 space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="font-bold text-base text-text-primary">Antrean Pembayaran Menunggu Review</h3>
+                <a href="#admin-pembayaran" data-nav-link="admin-pembayaran" class="text-xs text-primary font-semibold hover:underline">Kelola Semua</a>
+              </div>
+              <div id="verification-queue" class="space-y-3">
+                <!-- Injected by loadAdminDashboard() -->
+                <p class="text-sm text-text-secondary">Tidak ada antrean pembayaran saat ini.</p>
+              </div>
+            </div>
+
+            <!-- CRM Tasks -->
+            <div class="card p-6 space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="font-bold text-base text-text-primary">Tugas Tindak Lanjut CRM</h3>
+                <a href="#admin-crm" data-nav-link="admin-crm" class="text-xs text-primary font-semibold hover:underline">Buka CRM</a>
+              </div>
+              <div id="crm-tasks-list" class="space-y-3">
+                <!-- Injected by loadAdminDashboard() -->
+                <p class="text-sm text-text-secondary">Tidak ada jadwal tindak lanjut hari ini.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================== -->
+      <!-- SECTION 9: ADMIN KELAS & MATERI                        -->
+      <!-- ====================================================== -->
+      <section id="section-admin-kelas" class="content-section" style="display: none;">
+        <div class="max-w-7xl mx-auto space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h1 class="text-2xl md:text-3xl font-bold text-text-primary">Kelola Kelas & Kurikulum</h1>
+              <p class="text-sm text-text-secondary mt-1">Tambah, perbarui, dan atur modul serta video pembelajaran.</p>
+            </div>
+            <button type="button" onclick="openCourseEditor()" class="btn-primary flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px]">add_circle</span>
+              <span>Tambah Kelas Baru</span>
+            </button>
+          </div>
+
+          <div id="admin-courses-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Injected by loadAdminCourses() -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================== -->
+      <!-- SECTION 10: ADMIN PEMBAYARAN & PESANAN                 -->
+      <!-- ====================================================== -->
+      <section id="section-admin-pembayaran" class="content-section" style="display: none;">
+        <div class="max-w-7xl mx-auto space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h1 class="text-2xl md:text-3xl font-bold text-text-primary">Kelola Pesanan & Pembayaran</h1>
+              <p class="text-sm text-text-secondary mt-1">Verifikasi bukti transfer manual atau cek mutasi transaksi gateway.</p>
+            </div>
+            <!-- Filter Status -->
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="loadAdminOrders('all')" class="px-3 py-1 rounded-full text-xs font-semibold bg-primary-container text-white">Semua</button>
+              <button type="button" onclick="loadAdminOrders('AwaitingReview')" class="px-3 py-1 rounded-full text-xs font-semibold bg-white border border-border-light text-text-secondary">Menunggu Review</button>
+              <button type="button" onclick="loadAdminOrders('Paid')" class="px-3 py-1 rounded-full text-xs font-semibold bg-white border border-border-light text-text-secondary">Lunas</button>
+            </div>
+          </div>
+
+          <div class="card overflow-hidden">
+            <div class="table-responsive">
+              <table class="table-modern w-full text-left text-sm">
+                <thead>
+                  <tr class="bg-surface-container">
+                    <th class="p-4">Order ID</th>
+                    <th class="p-4">Pembeli</th>
+                    <th class="p-4">Kelas</th>
+                    <th class="p-4">Metode</th>
+                    <th class="p-4">Nominal</th>
+                    <th class="p-4">Status</th>
+                    <th class="p-4">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-orders-table-body">
+                  <!-- Injected by loadAdminOrders() -->
+                </tbody>
+              </table>
+            </div>
+            <div id="orders-pagination" class="p-4 flex justify-between items-center border-t border-border-light"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================== -->
+      <!-- SECTION 11: ADMIN ANGGOTA & AKSES                      -->
+      <!-- ====================================================== -->
+      <section id="section-admin-anggota" class="content-section" style="display: none;">
+        <div class="max-w-7xl mx-auto space-y-6">
+          <div>
+            <h1 class="text-2xl md:text-3xl font-bold text-text-primary">Kelola Member & Hak Akses</h1>
+            <p class="text-sm text-text-secondary mt-1">Daftar akun terdaftar, status enrollment, dan pemberian akses manual.</p>
+          </div>
+
+          <div class="card overflow-hidden">
+            <div class="table-responsive">
+              <table class="table-modern w-full text-left text-sm">
+                <thead>
+                  <tr class="bg-surface-container">
+                    <th class="p-4">Nama Lengkap</th>
+                    <th class="p-4">Email</th>
+                    <th class="p-4">No. WhatsApp</th>
+                    <th class="p-4">Role</th>
+                    <th class="p-4">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="members-table-body">
+                  <!-- Injected by loadAdminMembers() -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================== -->
+      <!-- SECTION 12: ADMIN CRM & PROSPEK                        -->
+      <!-- ====================================================== -->
+      <section id="section-admin-crm" class="content-section" style="display: none;">
+        <div class="max-w-7xl mx-auto space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h1 class="text-2xl md:text-3xl font-bold text-text-primary">CRM & Pipeline Penjualan</h1>
+              <p class="text-sm text-text-secondary mt-1">Kelola prospek dari leads masuk, tertarik, hingga menjadi pembeli loyal.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <input id="crm-search" type="text" placeholder="Cari kontak prospek..." 
+                     class="px-4 py-1.5 rounded-full border border-border-light text-xs focus:outline-none focus:border-primary"/>
+            </div>
+          </div>
+
+          <!-- Pipeline Kanban View -->
+          <div id="crm-pipeline" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <!-- Injected by loadCRM() in app.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================== -->
+      <!-- SECTION 13: PROFIL SAYA                                -->
+      <!-- ====================================================== -->
+      <section id="section-profil" class="content-section" style="display: none;">
+        <div class="max-w-xl mx-auto card p-8 space-y-6">
+          <h1 class="text-2xl font-bold text-text-primary">Profil Pengguna</h1>
+          <div class="space-y-4 text-sm">
+            <div>
+              <label class="block text-xs font-semibold text-text-secondary">Nama Lengkap</label>
+              <input type="text" id="profile-name" class="w-full mt-1 p-2.5 rounded-xl border border-border-light text-text-primary" value="Christine Eva" readonly/>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-text-secondary">Alamat Email</label>
+              <input type="email" id="profile-email" class="w-full mt-1 p-2.5 rounded-xl border border-border-light text-text-primary" value="eva@example.com" readonly/>
+            </div>
+            <div class="pt-4">
+              <button type="button" onclick="logout()" class="btn-danger w-full">Keluar dari Akun</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ============================================================ -->
+  <!-- MOBILE BOTTOM NAVIGATION (<768px)                            -->
+  <!-- ============================================================ -->
+  <nav class="bottom-nav md:hidden">
+    <a href="#katalog" class="bottom-nav-item active" data-nav-link="katalog">
+      <span class="material-symbols-outlined text-[20px]">menu_book</span>
+      <span>Katalog</span>
+    </a>
+    <a href="#dashboard-member" class="bottom-nav-item" data-nav-link="dashboard-member">
+      <span class="material-symbols-outlined text-[20px]">space_dashboard</span>
+      <span>Dashboard</span>
+    </a>
+    <a href="#kelas-saya" class="bottom-nav-item" data-nav-link="kelas-saya">
+      <span class="material-symbols-outlined text-[20px]">play_lesson</span>
+      <span>Kelas</span>
+    </a>
+    <a href="#transaksi" class="bottom-nav-item" data-nav-link="transaksi">
+      <span class="material-symbols-outlined text-[20px]">receipt_long</span>
+      <span>Pesanan</span>
+    </a>
+    <a href="#profil" class="bottom-nav-item" data-nav-link="profil">
+      <span class="material-symbols-outlined text-[20px]">person</span>
+      <span>Profil</span>
+    </a>
+  </nav>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Application Logic Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
