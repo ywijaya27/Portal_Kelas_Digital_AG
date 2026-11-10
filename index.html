@@ -781,18 +781,28 @@
       <!-- ====================================================== -->
       <section id="section-profil" class="content-section" style="display: none;">
         <div class="max-w-xl mx-auto card p-8 space-y-6">
-          <h1 class="text-2xl font-bold text-text-primary">Profil Pengguna</h1>
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 rounded-2xl bg-pastel-lavender text-primary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[36px]">account_circle</span>
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold text-text-primary">Profil Pengguna</h1>
+              <span id="profile-badge" class="badge badge-pending text-xs mt-1">Tamu (Belum Masuk)</span>
+            </div>
+          </div>
+
           <div class="space-y-4 text-sm">
             <div>
               <label class="block text-xs font-semibold text-text-secondary">Nama Lengkap</label>
-              <input type="text" id="profile-name" class="w-full mt-1 p-2.5 rounded-xl border border-border-light text-text-primary" value="Christine Eva" readonly/>
+              <input type="text" id="profile-name" class="w-full mt-1 p-2.5 rounded-xl border border-border-light text-text-primary bg-bg-canvas-light" value="Pengunjung / Tamu" readonly/>
             </div>
             <div>
               <label class="block text-xs font-semibold text-text-secondary">Alamat Email</label>
-              <input type="email" id="profile-email" class="w-full mt-1 p-2.5 rounded-xl border border-border-light text-text-primary" value="eva@example.com" readonly/>
+              <input type="email" id="profile-email" class="w-full mt-1 p-2.5 rounded-xl border border-border-light text-text-primary bg-bg-canvas-light" value="Belum masuk ke akun" readonly/>
             </div>
-            <div class="pt-4">
-              <button type="button" onclick="logout()" class="btn-danger w-full">Keluar dari Akun</button>
+            <div class="pt-4 flex flex-col gap-2">
+              <button id="profile-login-btn" type="button" onclick="navigateTo('login')" class="btn-primary w-full">Masuk ke Akun Anda</button>
+              <button id="profile-logout-btn" type="button" onclick="logout()" class="btn-danger w-full" style="display: none;">Keluar dari Akun</button>
             </div>
           </div>
         </div>

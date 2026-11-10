@@ -1,4 +1,4 @@
-/**
+﻿/**
  * app.js - File JavaScript Utama Portal Kelas Digital SPA
  * Arsitektur: SPA murni client-side, komunikasi backend via fetch() ke GAS URL
  * Pattern: gas-pro-api + gas-instant-ux + gas-scale-turbo
@@ -11,7 +11,15 @@
 // ============================================================
 
 /** URL backend Google Apps Script — dibaca dari config.js */
-const GAS_URL = window.GAS_URL || 'YOUR_GAS_URL_HERE';
+/** Ambil URL backend Google Apps Script secara dinamis & aman */
+function getGasUrl() {
+  const url = (typeof window !== 'undefined' && window.GAS_URL) || 
+              (typeof GAS_URL !== 'undefined' ? GAS_URL : '') || '';
+  if (url && url.startsWith('http') && !url.includes('YOUR_GAS_DEPLOYMENT_URL_HERE')) {
+    return url;
+  }
+  return 'https://script.google.com/macros/s/AKfycbyP2v-dKGb7SYU-RgKOeBkEVY3gm_m0YkLc7YShr7-26w4dVft7WkvAjyCxWEfocfU5/exec';
+}
 
 /** Durasi countdown checkout (24 jam dalam ms) */
 const CHECKOUT_DURATION_MS = 24 * 60 * 60 * 1000;
@@ -89,7 +97,7 @@ async function api(action, data = {}, isWrite = false) {
  * @returns {Promise<any>}
  */
 async function apiGet(action, params = {}) {
-  const url = new URL(GAS_URL);
+  const url = new URL(getGasUrl());
   url.searchParams.set('action', action);
   Object.entries(params).forEach(([k, v]) => {
     if (v !== null && v !== undefined) url.searchParams.set(k, v);
@@ -107,7 +115,7 @@ async function apiGet(action, params = {}) {
  * @returns {Promise<any>}
  */
 async function apiPost(action, data = {}) {
-  const res = await fetch(GAS_URL, {
+  const res = await fetch(getGasUrl(), {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify({ action, ...data })
@@ -183,7 +191,7 @@ function initTheme() {
 /** Daftar section yang membutuhkan login */
 const AUTH_REQUIRED_SECTIONS = [
   'dashboard-member', 'kelas-saya', 'ruang-belajar',
-  'profil', 'dashboard-admin', 'admin-pembayaran',
+  'dashboard-admin', 'admin-pembayaran',
   'admin-kelas', 'admin-anggota', 'admin-crm', 'admin-pengumuman'
 ];
 
@@ -279,10 +287,48 @@ async function loadSectionData(sectionId, params = {}) {
     case 'admin-crm':
       await loadCRM();
       break;
+    case 'profil':
+      updateUserProfileUI();
+      break;
   }
 }
 
 /** Inisialisasi event listener navigasi */
+/** Perbarui tampilan profil pengguna di sidebar dan seksi profil */
+function updateUserProfileUI() {
+  const user = appState.user;
+  const nameEl = document.getElementById('sidebar-user-name');
+  const roleEl = document.getElementById('sidebar-user-role');
+  const pName = document.getElementById('profile-name');
+  const pEmail = document.getElementById('profile-email');
+  const pBadge = document.getElementById('profile-badge');
+  const pLoginBtn = document.getElementById('profile-login-btn');
+  const pLogoutBtn = document.getElementById('profile-logout-btn');
+
+  if (user) {
+    if (nameEl) nameEl.textContent = user.name || 'Member';
+    if (roleEl) roleEl.textContent = user.role === 'admin' ? 'Administrator' : 'Member Aktif';
+    if (pName) pName.value = user.name || '';
+    if (pEmail) pEmail.value = user.email || '';
+    if (pBadge) {
+      pBadge.textContent = user.role === 'admin' ? 'Administrator' : 'Member Terdaftar';
+      pBadge.className = 'badge badge-paid text-xs mt-1';
+    }
+    if (pLoginBtn) pLoginBtn.style.display = 'none';
+    if (pLogoutBtn) pLogoutBtn.style.display = '';
+  } else {
+    if (nameEl) nameEl.textContent = 'Pengunjung';
+    if (roleEl) roleEl.textContent = 'Tamu';
+    if (pName) pName.value = 'Pengunjung / Tamu';
+    if (pEmail) pEmail.value = 'Belum masuk ke akun';
+    if (pBadge) {
+      pBadge.textContent = 'Tamu (Belum Masuk)';
+      pBadge.className = 'badge badge-pending text-xs mt-1';
+    }
+    if (pLoginBtn) pLoginBtn.style.display = '';
+    if (pLogoutBtn) pLogoutBtn.style.display = 'none';
+  }
+}
 function initNavigation() {
   // Tangani klik pada link navigasi
   document.addEventListener('click', e => {
@@ -402,6 +448,7 @@ function logout() {
     google.accounts.id.disableAutoSelect();
   }
 
+  updateUserProfileUI();
   showToast('Kamu berhasil keluar.', 'info');
   navigateTo('katalog');
 }
@@ -453,13 +500,43 @@ function renderCatalog(courses) {
   const container = document.getElementById('catalog-grid');
   if (!container) return;
 
-  if (!courses || courses.length === 0) {
-    container.innerHTML = '<p class="empty-state">Belum ada kelas tersedia saat ini.</p>';
-    return;
-  }
+  const sampleCourses = [
+    {
+      id: 'demo-gas',
+      title: 'Mastering GAS Fullstack & Pure REST API',
+      category: 'Google Apps Script',
+      description: 'Bangun web app decoupling dengan backend Google Apps Script, Google Sheets database, dan frontend modern.',
+      price: 249000,
+      totalDuration: '18 jam',
+      lessonCount: 24,
+      isDemo: true
+    },
+    {
+      id: 'demo-nextjs',
+      title: 'Next.js 14 & Cloud Products Architecture',
+      category: 'Fullstack Cloud',
+      description: 'Pelajari arsitektur fullstack enterprise, Server Actions, pipeline otentikasi Google, dan rilis web app siap pakai.',
+      price: 299000,
+      totalDuration: '22 jam',
+      lessonCount: 30,
+      isDemo: true
+    },
+    {
+      id: 'demo-automasi',
+      title: 'Automasi Bisnis dengan WhatsApp API & CRM',
+      category: 'Automasi Bisnis',
+      description: 'Integrasi WhatsApp Gateway Fonnte, antrean pengiriman pesan non-blocking, blast massal, dan manajemen pipeline CRM.',
+      price: 199000,
+      totalDuration: '12 jam',
+      lessonCount: 16,
+      isDemo: true
+    }
+  ];
 
-  container.innerHTML = courses.map((course, idx) => renderCourseCard(course, idx)).join('');
-  initSearch('catalog-search', courses, (filtered) => {
+  const list = (courses && courses.length > 0) ? courses : sampleCourses;
+
+  container.innerHTML = list.map((course, idx) => renderCourseCard(course, idx)).join('');
+  initSearch('catalog-search', list, (filtered) => {
     container.innerHTML = filtered.map((c, i) => renderCourseCard(c, i)).join('');
   });
 }
@@ -2391,6 +2468,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 3. Inisialisasi sidebar mobile
   initMobileDrawer();
+  updateUserProfileUI();
 
   // 4. Cek sesi tersimpan di localStorage
   const savedSession = localStorage.getItem(SESSION_KEY);
