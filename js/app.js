@@ -320,6 +320,14 @@ function updateUserProfileUI() {
   const pBadge = document.getElementById('profile-badge');
   const pLoginBtn = document.getElementById('profile-login-btn');
   const pLogoutBtn = document.getElementById('profile-logout-btn');
+  const adminSection = document.getElementById('sidebar-admin-section');
+  const headerBtn = document.getElementById('header-user-btn');
+  const headerLabel = document.getElementById('header-user-label');
+
+  // Kontrol Hak Akses Sidebar Menu Admin: HANYA TAMPIL JIKA ROLE === 'admin'
+  if (adminSection) {
+    adminSection.style.display = (user && user.role === 'admin') ? '' : 'none';
+  }
 
   if (user) {
     if (nameEl) nameEl.textContent = user.name || 'Member';
@@ -332,6 +340,21 @@ function updateUserProfileUI() {
     }
     if (pLoginBtn) pLoginBtn.style.display = 'none';
     if (pLogoutBtn) pLogoutBtn.style.display = '';
+
+    // Perbarui Tombol Header Atas
+    if (headerBtn && headerLabel) {
+      if (user.role === 'admin') {
+        headerBtn.className = 'btn-secondary text-xs sm:text-sm px-3.5 py-1.5 rounded-full flex items-center gap-1.5 border border-primary-container text-primary-container font-semibold';
+        headerBtn.setAttribute('href', '#dashboard-admin');
+        headerBtn.setAttribute('data-nav-link', 'dashboard-admin');
+        headerLabel.textContent = 'Admin: ' + (user.name ? user.name.split(' ')[0] : 'Admin');
+      } else {
+        headerBtn.className = 'btn-secondary text-xs sm:text-sm px-3.5 py-1.5 rounded-full flex items-center gap-1.5';
+        headerBtn.setAttribute('href', '#profil');
+        headerBtn.setAttribute('data-nav-link', 'profil');
+        headerLabel.textContent = user.name ? user.name.split(' ')[0] : 'Member';
+      }
+    }
   } else {
     if (nameEl) nameEl.textContent = 'Pengunjung';
     if (roleEl) roleEl.textContent = 'Tamu';
@@ -343,6 +366,13 @@ function updateUserProfileUI() {
     }
     if (pLoginBtn) pLoginBtn.style.display = '';
     if (pLogoutBtn) pLogoutBtn.style.display = 'none';
+
+    if (headerBtn && headerLabel) {
+      headerBtn.className = 'btn-primary text-xs sm:text-sm px-4 py-1.5 rounded-full flex items-center gap-1.5';
+      headerBtn.setAttribute('href', '#login');
+      headerBtn.setAttribute('data-nav-link', 'login');
+      headerLabel.textContent = 'Masuk';
+    }
   }
 }
 function initNavigation() {
@@ -2631,6 +2661,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const session = JSON.parse(savedSession);
       if (session && session.token) {
         appState.user = session;
+        updateUserProfileUI();
 
         // Arahkan ke dashboard sesuai role
         if (session.role === 'admin') {
@@ -2639,14 +2670,19 @@ document.addEventListener('DOMContentLoaded', () => {
           navigateTo('dashboard-member');
         }
       } else {
+        appState.user = null;
+        updateUserProfileUI();
         navigateTo('katalog');
       }
     } catch (_) {
       localStorage.removeItem(SESSION_KEY);
+      appState.user = null;
+      updateUserProfileUI();
       navigateTo('katalog');
     }
   } else {
     // Tampilkan katalog publik untuk pengunjung
+    updateUserProfileUI();
     navigateTo('katalog');
   }
 

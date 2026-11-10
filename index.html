@@ -128,34 +128,36 @@
         <span>Profil Saya</span>
       </a>
 
-      <!-- Area Manajemen Admin -->
-      <div class="sidebar-divider"></div>
-      <div class="sidebar-section-label">Manajemen Admin</div>
+      <!-- Area Manajemen Admin (Hanya tampil untuk Role Admin) -->
+      <div id="sidebar-admin-section" style="display: none;">
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-label">Manajemen Admin</div>
 
-      <a href="#dashboard-admin" class="nav-item" data-nav-link="dashboard-admin">
-        <span class="material-symbols-outlined nav-icon">monitoring</span>
-        <span>Dashboard Bisnis</span>
-      </a>
+        <a href="#dashboard-admin" class="nav-item" data-nav-link="dashboard-admin">
+          <span class="material-symbols-outlined nav-icon">monitoring</span>
+          <span>Dashboard Bisnis</span>
+        </a>
 
-      <a href="#admin-kelas" class="nav-item" data-nav-link="admin-kelas">
-        <span class="material-symbols-outlined nav-icon">auto_stories</span>
-        <span>Kelas & Materi</span>
-      </a>
+        <a href="#admin-kelas" class="nav-item" data-nav-link="admin-kelas">
+          <span class="material-symbols-outlined nav-icon">auto_stories</span>
+          <span>Kelas & Materi</span>
+        </a>
 
-      <a href="#admin-pembayaran" class="nav-item" data-nav-link="admin-pembayaran">
-        <span class="material-symbols-outlined nav-icon">payments</span>
-        <span>Pesanan & Bayar</span>
-      </a>
+        <a href="#admin-pembayaran" class="nav-item" data-nav-link="admin-pembayaran">
+          <span class="material-symbols-outlined nav-icon">payments</span>
+          <span>Pesanan & Bayar</span>
+        </a>
 
-      <a href="#admin-anggota" class="nav-item" data-nav-link="admin-anggota">
-        <span class="material-symbols-outlined nav-icon">group</span>
-        <span>Member & Akses</span>
-      </a>
+        <a href="#admin-anggota" class="nav-item" data-nav-link="admin-anggota">
+          <span class="material-symbols-outlined nav-icon">group</span>
+          <span>Member & Akses</span>
+        </a>
 
-      <a href="#admin-crm" class="nav-item" data-nav-link="admin-crm">
-        <span class="material-symbols-outlined nav-icon">contact_page</span>
-        <span>CRM & Prospek</span>
-      </a>
+        <a href="#admin-crm" class="nav-item" data-nav-link="admin-crm">
+          <span class="material-symbols-outlined nav-icon">contact_page</span>
+          <span>CRM & Prospek</span>
+        </a>
+      </div>
     </div>
 
     <!-- Sidebar Footer / User Profile -->
@@ -211,9 +213,9 @@
       </div>
 
       <!-- Quick Action / Login Button -->
-      <a href="#login" data-nav-link="login" class="btn-primary text-xs sm:text-sm px-4 py-1.5 rounded-full flex items-center gap-1.5">
+      <a href="#login" id="header-user-btn" data-nav-link="login" class="btn-primary text-xs sm:text-sm px-4 py-1.5 rounded-full flex items-center gap-1.5">
         <span class="material-symbols-outlined text-[16px]">login</span>
-        <span>Masuk</span>
+        <span id="header-user-label">Masuk</span>
       </a>
     </div>
   </header>
