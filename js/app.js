@@ -104,7 +104,15 @@ async function apiGet(action, params = {}) {
   });
   const res = await fetch(url.toString());
   if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-  return res.json();
+  const json = await res.json();
+  if (json && json.code === 401) {
+    console.warn('Sesi tidak valid / kadaluarsa:', json.message);
+    localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem('session_token');
+    appState.user = null;
+    updateUserProfileUI();
+  }
+  return json;
 }
 
 /**
@@ -121,7 +129,15 @@ async function apiPost(action, data = {}) {
     body: JSON.stringify({ action, ...data })
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-  return res.json();
+  const json = await res.json();
+  if (json && json.code === 401) {
+    console.warn('Sesi tidak valid / kadaluarsa:', json.message);
+    localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem('session_token');
+    appState.user = null;
+    updateUserProfileUI();
+  }
+  return json;
 }
 
 // ============================================================
@@ -432,6 +448,42 @@ async function handleGoogleCredential(response) {
 /**
  * Logout pengguna: hapus state dan session.
  */
+/**
+ * Masuk menggunakan akun demo (Admin atau Member) secara instan
+ * @param {'admin'|'member'} role
+ */
+async function loginAsDemo(role = 'member') {
+  showSkeleton('section-login');
+  try {
+    const result = await api('loginDemo', { role }, true);
+    if (result && result.success && result.data && result.data.token) {
+      appState.user = result.data.user;
+      appState.user.token = result.data.token;
+    } else {
+      appState.user = {
+        name: role === 'admin' ? 'Administrator' : 'Christine Eva',
+        email: role === 'admin' ? 'admin@demo.com' : 'eva@demo.com',
+        role: role,
+        token: role === 'admin' ? 'demo-admin-token' : 'demo-token'
+      };
+    }
+  } catch (e) {
+    appState.user = {
+      name: role === 'admin' ? 'Administrator' : 'Christine Eva',
+      email: role === 'admin' ? 'admin@demo.com' : 'eva@demo.com',
+      role: role,
+      token: role === 'admin' ? 'demo-admin-token' : 'demo-token'
+    };
+  } finally {
+    localStorage.setItem(SESSION_KEY, JSON.stringify(appState.user));
+    localStorage.setItem('session_token', appState.user.token);
+    updateUserProfileUI();
+    hideSkeleton('section-login');
+    showToast(`Berhasil masuk sebagai ${role === 'admin' ? 'Administrator' : 'Member Demo'}`, 'success');
+    navigateTo(role === 'admin' ? 'dashboard-admin' : 'dashboard-member');
+  }
+}
+window.loginAsDemo = loginAsDemo;
 function logout() {
   appState.user = null;
   appState.catalog = null;

@@ -308,11 +308,11 @@
 
           <!-- Demo Quick Access Buttons -->
           <div class="grid grid-cols-2 gap-3">
-            <button type="button" class="btn-secondary text-xs py-2.5" onclick="appState.user = {name: 'Christine Eva', email: 'eva@example.com', role: 'member', token: 'demo-token'}; navigateTo('dashboard-member'); showToast('Masuk sebagai Member Demo', 'success');">
+            <button type="button" class="btn-secondary text-xs py-2.5" onclick="loginAsDemo('member')">
               <span class="material-symbols-outlined text-[16px]">person</span>
               <span>Demo Member</span>
             </button>
-            <button type="button" class="btn-secondary text-xs py-2.5" onclick="appState.user = {name: 'Administrator', email: 'admin@example.com', role: 'admin', token: 'demo-admin-token'}; navigateTo('dashboard-admin'); showToast('Masuk sebagai Admin Demo', 'success');">
+            <button type="button" class="btn-secondary text-xs py-2.5" onclick="loginAsDemo('admin')">
               <span class="material-symbols-outlined text-[16px]">admin_panel_settings</span>
               <span>Demo Admin</span>
             </button>
